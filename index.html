@@ -3,27 +3,644 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>APC - Add a Pro Connect</title>  
+  <title>Ada Pro - Fast Turnaround Service Network</title>  
   
-  <meta name="theme-color" content="#EF4444"> <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkFkYSBQcm8gTmV0d29yayIsCiAgInNob3J0X25hbWUiOiAiQWRhUHJvIiwKICAiZGVzY3JpcHRpb24iOiAiUHJvZmVzc2lvbmFsIFNlcnZpY2VzIE5ldHdvcmsgTWFya2V0cGxhY2UiLAogICJzdGFydF91cmwiOiAiLi9pbmRleC5odG1sIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMTExMTExIiwKICAidGhlbWVfY29sb3IiOiAiI0VGNDQwMCIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9pbWFnZXMudW5zcGxhc2guY29tL3Bob3RvLTE2MjE5MDUyNTExODktMDhiNDVkNmEyNjllP2F1dG89Zm9ybWF0JmZpdD1jcm9wJnc9MTkyJmg9MTkyJnE9ODAiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL2pwZWciCiAgICB9LAogICAgewogICAgICAic3JjIjogImh0dHBzOi8vaW1hZ2VzLnVuc3BsYXNoLmNvbS9waG90by0xNjIxOTA1MjUxMTg5LTA4YjQ1ZDZhMjY5ZT9hdXRvPWZvcm1hdCZmaXQ9Y3JvcCZ3PTUxMiZoPTUxMiZxPTgwIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9qcGVnIgogICAgfQogIF0KfQ==">
+  <meta name="theme-color" content="#EF4444">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
+  <meta name="apple-mobile-web-app-title" content="AdaPro">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=192&h=192&q=80">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css">
+  
+  <style>
+    :root {
+      --primary-red: #EF4444;
+      --primary-black: #111111;
+      --primary-blue: #2563EB;
+      --surface-card: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      --success: #16a34a;
+      --stripe-blue: #2563EB;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      margin: 0; padding: 0; min-height: 100vh;
+    }
+
+    /* --- Navigation Banner --- */
+    .header-banner {
+      background-color: var(--primary-black);
+      color: #ffffff;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 4px solid var(--primary-red);
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .brand-logo { font-weight: 900; font-size: 26px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .brand-logo span { color: var(--primary-red); }
+
+    .role-toggle-bar {
+      display: flex; background: #27272a; padding: 4px; border-radius: 6px;
+    }
+
+    .role-toggle-btn {
+      background: none; border: none; color: #a1a1aa; padding: 8px 16px;
+      font-weight: 700; font-size: 13px; cursor: pointer; border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .role-toggle-btn.active { background: var(--primary-red); color: white; }
+
+    /* --- Core Section Tabs System --- */
+    .navigation-tabs {
+      display: flex; gap: 8px; margin: 24px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;
+      overflow-x: auto;
+    }
+
+    .nav-tab-link {
+      background: none; border: none; padding: 10px 20px; font-size: 15px;
+      font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 6px;
+      white-space: nowrap; transition: all 0.2s ease;
+    }
+
+    .nav-tab-link.active {
+      color: var(--primary-red); background: rgba(239, 68, 68, 0.08);
+    }
+
+    .dashboard-panel { display: none; }
+    .dashboard-panel.active-panel { display: block; }
+
+    .app-layout { max-width: 1200px; margin: 0 auto 60px auto; padding: 0 24px; }
+
+    /* --- Information Contact Bar --- */
+    .support-contact-strip {
+      background: linear-gradient(90deg, var(--primary-black) 0%, #27272a 100%);
+      color: #ffffff; padding: 12px 24px; border-radius: 8px; margin-bottom: 20px;
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 14px; font-weight: 600;
+    }
+
+    .support-contact-strip a { color: var(--primary-red); text-decoration: none; }
+    .support-contact-strip a:hover { text-decoration: underline; }
+
+    /* --- UI Grid Elements --- */
+    .ui-cards-container {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 32px;
+    }
+
+    .ui-feature-card {
+      background: var(--surface-card); border-radius: 12px; padding: 24px;
+      border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      box-sizing: border-box;
+    }
+
+    .ui-feature-card h4 { margin-top: 0; font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; color: var(--primary-black); }
+
+    /* --- Stripe Direct Checkout Styling --- */
+    .stripe-checkout-btn {
+      background-color: var(--primary-blue); color: white; border: none; width: 100%;
+      padding: 14px; border-radius: 6px; font-size: 14px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s;
+    }
+    .stripe-checkout-btn:hover { opacity: 0.9; }
+
+    /* --- Handyman Catalog Cards --- */
+    .handyman-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;
+    }
+    .handyman-card {
+      background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .handyman-img { width: 100%; height: 140px; object-fit: cover; }
+    .handyman-info { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .handyman-title { font-size: 15px; font-weight: 700; margin: 0 0 12px 0; color: var(--text-main); }
+    
+    .btn-card-action {
+      width: 100%; padding: 10px; background: #f1f5f9; border: 1px solid #cbd5e1;
+      border-radius: 4px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 11px;
+      transition: all 0.2s ease;
+    }
+    .btn-card-action:hover { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+
+    /* --- Tables --- */
+    .table-wrapper { background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 500px; }
+    th { background: #f8fafc; padding: 12px 16px; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid #e2e8f0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; }
+
+    /* --- Input Styles --- */
+    .field-input { width: 100%; padding: 10px; margin: 8px 0 16px 0; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+    .form-submit-btn { width: 100%; background: var(--primary-red); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; transition: opacity 0.2s; }
+    .form-submit-btn:hover { opacity: 0.9; }
+
+    /* --- Reviews Feed Elements --- */
+    .review-row-box { background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid var(--primary-red); }
+    .review-stars { color: #eab308; font-weight: bold; font-size: 12px; margin-bottom: 4px; }
+    
+    /* --- Annual Calendar Matrix Layout --- */
+    .calendar-year-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 12px;
+    }
+    .calendar-slot {
+      background: #dcfce7; color: #16a34a; padding: 12px 4px; text-align: center; border-radius: 4px; font-weight: bold; font-size: 11px; cursor: pointer; border: 1px solid #bbf7d0; transition: transform 0.1s ease;
+    }
+    .calendar-slot:active { transform: scale(0.95); }
+    .calendar-slot.booked { background: #fee2e2; color: #ef4444; border-color: #fca5a5; cursor: not-allowed; }
+
+    .referral-match-box {
+      margin-top: 12px; padding: 12px; background: #f0fdf4; border: 1px dashed var(--success); border-radius: 6px; font-size: 13px;
+    }
+
+    /* Interactive Operational Actions Elements */
+    .action-badge-btn {
+      padding: 6px 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase; margin-right: 4px;
+    }
+    .badge-claim { background: #dbeafe; color: #1e40af; }
+    .badge-claim:hover { background: #2563EB; color: white; }
+    .badge-complete { background: #dcfce7; color: #15803d; }
+    .badge-complete:hover { background: #16a34a; color: white; }
+
+    .section-title { color: var(--primary-black); margin-top: 24px; margin-bottom: 8px; }
+  </style>
 </head>
 <body>
 
   <header class="header-banner">
-    <div class="brand-logo">APC<span>CONNECT</span></div>
+    <div class="brand-logo">ADA<span>PRO</span></div>
     <div class="role-toggle-bar">
-      <button class="role-toggle-btn active" id="toggle-client">Client Workspace</button>
-      <button class="role-toggle-btn" id="toggle-pro">Pro Dashboard</button>
+      <button class="role-toggle-btn active" id="toggle-client" onclick="SystemKernel.UI.switchDashboardMode('client')">Client Workspace</button>
+      <button class="role-toggle-btn" id="toggle-pro" onclick="SystemKernel.UI.switchDashboardMode('pro')">Pro Dashboard</button>
     </div>
   </header>
 
-  <div class="app-layout">
+  <div id="auth-management-bar" style="background: #111111; color: #ffffff; padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-family: sans-serif; font-size: 14px; border-bottom: 1px solid #27272a;">
+    <div>
+      <span id="auth-status-label" style="font-weight: 600; color: #a1a1aa;">Browsing Mode: Sandbox Account Profile</span>
+    </div>
+    <div id="auth-action-controls" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;"></div>
+  </div>
+
+  <div class="app-layout" style="margin-top: 24px;">
+    <div class="support-contact-strip">
+      <div><i class="fa-solid fa-phone"></i> Direct Dispatch: <strong>843-901-8642</strong></div>
+      <div><i class="fa-solid fa-envelope"></i> Operations Email: <a href="mailto:adaprollc@gmail.com">adaprollc@gmail.com</a></div>
     </div>
 
-  <script type="module" src="js/main.js"></script>
+    <div id="client-view-container">
+      <div class="navigation-tabs">
+        <button class="nav-tab-link active" onclick="SystemKernel.UI.switchTab('client', 'c-marketplace', this)">Handyman Marketplace</button>
+        <button class="nav-tab-link" onclick="SystemKernel.UI.switchTab('client', 'c-barter', this)">Barter Portfolio</button>
+        <button class="nav-tab-link" onclick="SystemKernel.UI.switchTab('client', 'c-schedule', this)">Annual Dispatch Calendar</button>
+        <button class="nav-tab-link" onclick="SystemKernel.UI.switchTab('client', 'c-reviews', this)">Referrals & Trust Logs</button>
+      </div>
+
+      <div id="c-marketplace" class="dashboard-panel active-panel">
+        <div class="ui-cards-container">
+          <div class="ui-feature-card" id="client-workspace-panel">
+            <h4><i class="fa-solid fa-wallet"></i> Prepaid Point Balance</h4>
+            <p style="font-size: 28px; font-weight: 900; margin: 8px 0; color: var(--primary-red);" id="client-display-points">0 Points</p>
+            
+            <label for="point-tier-select" style="font-size: 12px; font-weight: bold; color: var(--text-muted);">Select Prepaid Discount Tier:</label>
+            <select id="point-tier-select" class="field-input" style="margin-bottom: 12px;">
+              <option value="100">100 Points ($100 - Standard)</option>
+              <option value="300">300 Points ($270 - 10% Bulk Discount)</option>
+              <option value="600">600 Points ($480 - 20% Pro VIP Value)</option>
+            </select>
+
+            <button id="stripeCheckoutBtn" class="stripe-checkout-btn">
+              <i class="fa-brands fa-stripe"></i> Buy Points via Stripe Checkout
+            </button>
+          </div>
+          
+          <div class="ui-feature-card">
+            <h4><i class="fa-solid fa-file-invoice"></i> Smart Pro Routing Engine</h4>
+            <span style="font-size: 11px; color: var(--primary-red); font-weight: bold; display: block; margin-top: -8px; margin-bottom: 8px;">* Cost: 30 Points per route request</span>
+            <label for="quote-desc">Describe your job assignment requirements:</label>
+            <input type="text" id="quote-desc" class="field-input" placeholder="e.g., Leaky kitchen p-trap bypass">
+            
+            <label for="routing-category" style="font-size: 12px; font-weight: bold; color: var(--text-muted);">Trade Classification:</label>
+            <select id="routing-category" class="field-input" style="margin-bottom: 12px;">
+              <option value="Plumbing Repair">Plumbing Operations</option>
+              <option value="Electrical Maintenance">Electrical Systems</option>
+              <option value="Drywall Repair">Drywall / Finish Work</option>
+              <option value="Doorbell Installation">Smart Systems / Security</option>
+            </select>
+            
+            <button id="requestMatchBtn" class="form-submit-btn">Request Instant Match</button>
+            <div id="matching-feedback-node"></div>
+          </div>
+        </div>
+
+        <h3 class="section-title"><i class="fa-solid fa-bolt"></i> Low-Complexity / Fast-Turnaround Catalog</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-top:-15px; margin-bottom:20px;">*Notice: We specialize strictly in quick, high-speed jobs with immediate same-week completions.</p>
+        
+        <div class="handyman-grid">
+          <div class="handyman-card">
+            <img class="handyman-img" alt="Electrical Repairs" src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80">
+            <div class="handyman-info">
+              <div class="handyman-title">Electrical Repairs (Outlets/Switches)</div>
+              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Electrical Maintenance')">Book Job Now</button>
+            </div>
+          </div>
+          <div class="handyman-card">
+            <img class="handyman-img" alt="Plumbing Maintenance" src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=400&q=80">
+            <div class="handyman-info">
+              <div class="handyman-title">Plumbing & Faucet Replacements</div>
+              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Plumbing Repair')">Book Job Now</button>
+            </div>
+          </div>
+          <div class="handyman-card">
+            <img class="handyman-img" alt="Drywall Refurbishing" src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=400&q=80">
+            <div class="handyman-info">
+              <div class="handyman-title">Drywall Patching & Finish Prep</div>
+              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Drywall Repair')">Book Job Now</button>
+            </div>
+          </div>
+          <div class="handyman-card">
+            <img class="handyman-img" alt="Smart System Setup" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=400&q=80">
+            <div class="handyman-info">
+              <div class="handyman-title">Smart Video Doorbell Installation</div>
+              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Doorbell Installation')">Book Job Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="c-barter" class="dashboard-panel">
+        <div class="ui-cards-container">
+          <div class="ui-feature-card">
+            <h4><i class="fa-solid fa-box-open"></i> Manage Your Asset Trade Profile</h4>
+            <label for="barter-asset">Item/Service You Offer to Trade:</label>
+            <input type="text" id="barter-asset" class="field-input" placeholder="e.g., 4 Custom Cedar Fence Posts">
+            <button class="form-submit-btn" onclick="SystemKernel.IO.saveClientBarterAsset()">Publish to Exchange Board</button>
+          </div>
+          <div class="ui-feature-card">
+            <h4>Your Active Listed Exchange Items</h4>
+            <div id="client-barter-list" style="font-size:13px; color:var(--text-muted);">No items published yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="c-schedule" class="dashboard-panel">
+        <h3 class="section-title"><i class="fa-solid fa-calendar-days"></i> Live 2026 Shift Distribution Matrix</h3>
+        <p style="color:var(--text-muted); font-size:13px;">Select an open tracking slot below to request immediate assignment.</p>
+        <div class="calendar-year-grid" id="client-calendar-matrix"></div>
+      </div>
+
+      <div id="c-reviews" class="dashboard-panel">
+        <div class="ui-cards-container">
+          <div class="ui-feature-card">
+            <h4><i class="fa-solid fa-pen-nib"></i> Post Ecosystem Referral Review</h4>
+            <label for="review-target-type">Target Entrant Type:</label>
+            <select id="review-target-type" class="field-input">
+              <option value="Pro Contractor">Review a Pro Contractor</option>
+              <option value="Barter Partner">Review a Barter Partner</option>
+              <option value="Work Order Summary">Review Completed Work Order</option>
+            </select>
+            <label for="review-stars">Ecosystem Rating:</label>
+            <select id="review-stars" class="field-input">
+              <option value="5">★★★★★ (5/5 Perfect Execution)</option>
+              <option value="4">★★★★☆ (4/5 Satisfactory)</option>
+            </select>
+            <label for="review-text">Operational Assessment Feedback:</label>
+            <input type="text" id="review-text" class="field-input" placeholder="Explain the transaction quality...">
+            <button class="form-submit-btn" onclick="SystemKernel.IO.postEcosystemReview()">File Network Review</button>
+          </div>
+          <div class="ui-feature-card">
+            <h4>Live Network Trust Stream</h4>
+            <div id="network-reviews-feed">Loading validated tracking loops...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pro-view-container" style="display:none;">
+      <div class="navigation-tabs">
+        <button class="nav-tab-link active" onclick="SystemKernel.UI.switchTab('pro', 'p-jobs', this)">Assigned Dispatches</button>
+        <button class="nav-tab-link" onclick="SystemKernel.UI.switchTab('pro', 'p-barter', this)">Ecosystem Barter Streams</button>
+        <button class="nav-tab-link" onclick="SystemKernel.UI.switchTab('pro', 'p-reviews', this)">Contractor Trust Score</button>
+      </div>
+
+      <div id="p-jobs" class="dashboard-panel active-panel">
+        <div class="ui-cards-container" style="margin-bottom: 20px;">
+          <div class="ui-feature-card" style="padding: 16px; background: #fef2f2; border: 1px solid #fecaca;">
+            <h4 style="color: #dc2626; margin-bottom: 4px;"><i class="fa-solid fa-building-columns"></i> Pro Earnings Wallet</h4>
+            <p style="font-size: 26px; font-weight: 900; color: #dc2626; margin: 4px 0;" id="pro-wallet-points">0 Points Accumulated</p>
+            <button class="form-submit-btn" style="background: #dc2626; font-size:12px; padding: 8px;" onclick="alert('Simulating direct deposit setup payout channel routing...')">Simulate Cash-Out Request</button>
+          </div>
+        </div>
+
+        <h3 class="section-title"><i class="fa-solid fa-briefcase"></i> Open Performance Dispatch Queue</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Tracking Code</th><th>Requested Service Block</th><th>Job Value</th><th>Assigned Specialist</th><th>Operational Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="pro-dispatch-rows">
+              <tr><td colspan="6">No active dispatches claimed yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="p-barter" class="dashboard-panel">
+        <h3 class="section-title"><i class="fa-solid fa-arrows-rotate"></i> Material Asset Trading Pool</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Origin Partner</th><th>Listed Material Asset Available for Trade</th></tr>
+            </thead>
+            <tbody id="pro-barter-board">
+              <tr><td colspan="2">No partner assets listed yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="p-reviews" class="dashboard-panel">
+        <div class="ui-cards-container">
+          <div class="ui-feature-card">
+            <h4><i class="fa-solid fa-medal"></i> Verified Pro Ranking</h4>
+            <p style="font-size:28px; font-weight:900; color:var(--primary-red); margin:8px 0;" id="pro-display-tier">Elite Tier Pro</p>
+            <p style="font-size:12px; color:var(--text-muted);">Maintained via high-speed turnarounds and flawless verified barter checkmarks.</p>
+          </div>
+          <div class="ui-feature-card">
+            <h4>Ecosystem Performance Stream</h4>
+            <div id="pro-isolated-reviews">Filtering network nodes...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="auth-gateway-overlay" class="fixed inset-0 z-50 hidden bg-black bg-opacity-90 backdrop-blur-md flex items-center justify-center p-4" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 999; display: flex; align-items: center; justify-content: center;">
+    <div style="background: #18181b; border: 1px solid #27272a; border-radius: 12px; width: 100%; max-width: 400px; padding: 30px; box-sizing: border-box; color: white;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 28px; font-weight: 900;">ADA <span style="color: var(--primary-red);">PRO</span></h2>
+            <p style="font-size: 12px; color: #a1a1aa; margin: 4px 0 0 0;">Enterprise Brokerage & Referral Network</p>
+        </div>
+        <div style="display: flex; background: #27272a; padding: 4px; border-radius: 6px; margin-bottom: 20px;">
+            <button id="auth-role-client-btn" onclick="setAuthRole('client')" style="width: 50%; border: none; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; background: #EF4444; color: white;">Client Portal</button>
+            <button id="auth-role-pro-btn" onclick="setAuthRole('pro')" style="width: 50%; border: none; background: transparent; color: #a1a1aa; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer;">Pro Provider</button>
+        </div>
+        <form id="auth-email-form" onsubmit="handleEmailAuth(event)" style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+                <label style="display: block; font-size: 11px; color: #a1a1aa; text-transform: uppercase; margin-bottom: 4px;">Email Address</label>
+                <input type="email" id="auth-email-input" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #3f3f46; background: #09090b; color: white; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="display: block; font-size: 11px; color: #a1a1aa; text-transform: uppercase; margin-bottom: 4px;">Password</label>
+                <input type="password" id="auth-password-input" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #3f3f46; background: #09090b; color: white; box-sizing: border-box;">
+            </div>
+            <button type="submit" style="width: 100%; background: var(--primary-red); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px;">Authenticate Session</button>
+        </form>
+        <button onclick="handleGoogleAuth()" style="width: 100%; margin-top: 12px; background: #09090b; border: 1px solid #3f3f46; color: white; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">Sign In With Google</button>
+        <div style="text-align: center; margin-top: 16px;"><a href="#" onclick="toggleAuthMode()" id="auth-toggle-link" style="color: var(--primary-red); font-size: 12px; text-decoration: none;">Need a platform profile? Register account</a></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+  <script>
+    // --- PWA SERVICE WORKER KERNEL ---
+    (function injectPWAKernel() {
+      if ('serviceWorker' in navigator) {
+        const swCode = `
+          const CACHE_NAME = 'adapro-kernel-v1';
+          const ASSETS = [ './index.html', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' ];
+          self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))));
+          self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob), { scope: './' }).catch(() => {});
+      }
+    })();
+
+    // --- CONSOLIDATED APPLICATION ARCHITECTURE CORE ---
+    const SystemKernel = (function () {
+      const _config = { 
+        apiKey: "AIzaSyB8bLp1E_FmE0fX-g8K8tU6zR8wM4X_kY0", 
+        authDomain: "adapro-cc678.firebaseapp.com",
+        databaseURL: "https://adapro-cc678-default-rtdb.firebaseio.com/" 
+      };
+
+      const _state = {
+        activeUserKey: "sample_customer_01",
+        clientPoints: 0,
+        proWalletPoints: 0,
+        userRole: "client",
+        userEmail: "",
+        databaseListeners: []
+      };
+
+      const _contractorRegistry = [
+        { name: "Apex Plumbing Solutions", trade: "Plumbing Repair", tier: "Pro Elite", rating: "5/5" },
+        { name: "ProConnect Electrical Corp", trade: "Electrical Maintenance", tier: "Pro Elite", rating: "4.9/5" },
+        { name: "Rapid Drywall Finishers", trade: "Drywall Repair", tier: "Certified Pro", rating: "4.8/5" },
+        { name: "SmartHome Link Integrators", trade: "Doorbell Installation", tier: "Certified Pro", rating: "5/5" }
+      ];
+
+      let db, auth;
+
+      function safeText(str) {
+        const div = document.createElement('div');
+        div.innerText = str || '';
+        return div.innerHTML;
+      }
+
+      function _clearListeners() {
+        _state.databaseListeners.forEach(ref => { if (typeof ref.off === 'function') ref.off(); });
+        _state.databaseListeners = [];
+      }
+
+      function _registerLiveDataPipes() {
+        try {
+          // Live Data Pipe 1: Core User Account State Sync
+          const pointsRef = db.ref(`users/${_state.activeUserKey}`);
+          pointsRef.on('value', (snapshot) => {
+            const userData = snapshot.val();
+            _state.clientPoints = (userData && (userData.points || userData.pointsBalance)) || 0;
+            _state.proWalletPoints = (userData && userData.proWalletPoints) || 0;
+            _state.userRole = (userData && userData.role) || "client";
+
+            const target = document.getElementById('client-display-points');
+            if (target) target.innerText = `${_state.clientPoints} Points`;
+
+            const walletTarget = document.getElementById('pro-wallet-points');
+            if (walletTarget) walletTarget.innerText = `${_state.proWalletPoints} Points Accumulated`;
+          });
+          _state.databaseListeners.push(pointsRef);
+
+          // Live Data Pipe 2: Global Marketplace/Queues
+          db.ref('dispatches').on('value', (snapshot) => {
+            const table = document.getElementById('pro-dispatch-rows');
+            if (!table) return;
+            let html = "";
+            if (snapshot.exists()) {
+              snapshot.forEach(child => {
+                const item = child.val();
+                const key = child.key;
+                const title = item.serviceName || item.serviceCategory || "General Request Task";
+                html += `<tr>
+                  <td><strong>${safeText(key)}</strong></td>
+                  <td>${safeText(title)}</td>
+                  <td><span style="background:#dbeafe; color:#1e40af; padding:2px 6px; border-radius:4px; font-weight:bold;">${item.pointValue || 20} Pts</span></td>
+                  <td>${safeText(item.assignedContractor || 'Unassigned Open Pool')}</td>
+                  <td><span style="color:#dc2626; font-weight:900;">${safeText(item.status)}</span></td>
+                  <td><button class="action-badge-btn badge-claim" onclick="SystemKernel.IO.updateDispatchState('${key}', 'CLAIMED')">Claim</button></td>
+                </tr>`;
+              });
+            } else {
+              html = `<tr><td colspan="6">No active dispatches found in standard records.</td></tr>`;
+            }
+            table.innerHTML = html;
+          });
+        } catch (e) { console.error("Database initialization telemetry error:", e); }
+      }
+
+      function _initAuthWatcher() {
+        auth.onAuthStateChanged((user) => {
+          _clearListeners();
+          if (user) {
+            _state.activeUserKey = user.uid;
+            _state.userEmail = user.email;
+            document.getElementById('auth-status-label').innerHTML = `🟢 Session Connection Live: <strong style="color:var(--primary-red);">${safeText(user.email)}</strong>`;
+            document.getElementById('auth-gateway-overlay').style.display = 'none';
+          } else {
+            _state.activeUserKey = "sample_customer_01";
+            document.getElementById('auth-status-label').innerText = "Browsing Mode: Sandbox Account Profile";
+          }
+          _registerLiveDataPipes();
+        });
+      }
+
+      return {
+        Boot: function () {
+          firebase.initializeApp(_config);
+          db = firebase.database();
+          auth = firebase.auth();
+          _initAuthWatcher();
+        },
+        UI: {
+          switchDashboardMode: function (targetMode) {
+            document.getElementById('toggle-client').classList.toggle('active', targetMode === 'client');
+            document.getElementById('toggle-pro').classList.toggle('active', targetMode === 'pro');
+            document.getElementById('client-view-container').style.display = targetMode === 'client' ? 'block' : 'none';
+            document.getElementById('pro-view-container').style.display = targetMode === 'pro' ? 'block' : 'none';
+            window.switchAppView(targetMode);
+          },
+          switchTab: function (context, targetId, btn) {
+            btn.parentElement.querySelectorAll('.nav-tab-link').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            const scope = context === 'client' ? '#client-view-container' : '#pro-view-container';
+            document.querySelectorAll(`${scope} .dashboard-panel`).forEach(p => p.classList.remove('active-panel'));
+            document.getElementById(targetId).classList.add('active-panel');
+          },
+          renderSystemMatrix: function () {
+            const grid = document.getElementById('client-calendar-matrix');
+            if (!grid) return;
+            for (let i = 1; i <= 24; i++) {
+              const slot = document.createElement('div');
+              slot.className = `calendar-slot ${i % 5 === 0 ? 'booked' : ''}`;
+              slot.innerText = i % 5 === 0 ? 'Filled' : `Week ${i}`;
+              grid.appendChild(slot);
+            }
+          }
+        },
+        IO: {
+          requestCatalogService: function (catalogName) {
+            const cost = 20;
+            if (_state.clientPoints < cost) return alert("⚠️ Insufficient point balances!");
+            const uuid = 'JOB_' + Math.floor(Math.random() * 9000 + 1000);
+            
+            db.ref(`users/${_state.activeUserKey}`).update({ points: _state.clientPoints - cost })
+              .then(() => {
+                return db.ref('dispatches/' + uuid).set({ 
+                  serviceName: catalogName, status: 'DISPATCHED', clientId: _state.activeUserKey, pointValue: cost, createdAt: new Date().toISOString()
+                });
+              }).then(() => alert(`🎉 Order Dispatched Natively: ${uuid}`));
+          },
+          updateDispatchState: function (jobId, status) {
+            db.ref(`dispatches/${jobId}`).update({ status: status, assignedContractor: _state.userEmail || "Claimed Pro Provider" })
+              .then(() => alert(`Status transformed: ${status}`));
+          },
+          saveClientBarterAsset: function() {
+            const input = document.getElementById('barter-asset');
+            if(!input.value.trim()) return;
+            db.ref(`barterTrades/profiles/${_state.activeUserKey}`).push(input.value.trim()).then(() => {
+              input.value = '';
+              alert("Barter token pushed directly to storage records!");
+            });
+          },
+          postEcosystemReview: function() {
+            const targetType = document.getElementById('review-target-type').value;
+            const stars = document.getElementById('review-stars').value;
+            const text = document.getElementById('review-text').value;
+            if(!text.trim()) return alert("Please provide feedback");
+            db.ref(`reviews/${_state.activeUserKey}`).push({ targetType, stars, text, createdAt: new Date().toISOString() }).then(() => {
+              document.getElementById('review-text').value = '';
+              alert("Review published successfully!");
+            });
+          }
+        }
+      };
+    })();
+
+    // --- BACKWARD ACCESSIBILITY WIRELESS LAYER MAPPINGS ---
+    window.switchAppView = function(viewMode) {
+      const clientSec = document.getElementById('client-workspace-panel');
+      const proSec = document.getElementById('p-jobs');
+      if(clientSec && proSec) {
+        clientSec.style.display = viewMode === 'pro' ? 'none' : 'block';
+        proSec.style.display = viewMode === 'pro' ? 'block' : 'none';
+      }
+    };
+
+    window.setAuthRole = (role) => {
+      document.getElementById('auth-role-client-btn').style.background = role === 'client' ? '#EF4444' : 'transparent';
+      document.getElementById('auth-role-client-btn').style.color = role === 'client' ? 'white' : '#a1a1aa';
+      document.getElementById('auth-role-pro-btn').style.background = role === 'pro' ? '#EF4444' : 'transparent';
+      document.getElementById('auth-role-pro-btn').style.color = role === 'pro' ? 'white' : '#a1a1aa';
+    };
+
+    window.handleEmailAuth = (e) => {
+      e.preventDefault();
+      document.getElementById('auth-gateway-overlay').style.display = 'none';
+    };
+    
+    window.handleGoogleAuth = () => {
+      document.getElementById('auth-gateway-overlay').style.display = 'none';
+    };
+
+    window.toggleAuthMode = () => {};
+
+    // --- START OPERATIONS LAYER BOOTSTRAP ---
+    window.addEventListener('DOMContentLoaded', () => {
+      SystemKernel.Boot();
+      SystemKernel.UI.renderSystemMatrix();
+
+      // Form Match Listener Binder
+      const matchBtn = document.getElementById('requestMatchBtn');
+      if(matchBtn) {
+        matchBtn.addEventListener('click', () => {
+          const desc = document.getElementById('quote-desc').value;
+          const cat = document.getElementById('routing-category').value;
+          SystemKernel.IO.requestCatalogService(`${cat}: ${desc}`);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
