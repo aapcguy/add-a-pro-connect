@@ -249,28 +249,28 @@
             <img class="handyman-img" alt="Electrical Repairs" src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80">
             <div class="handyman-info">
               <div class="handyman-title">Electrical Repairs (Outlets/Switches)</div>
-              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Electrical Maintenance')">Book Job Now</button>
+              <button class="btn-card-action" onclick="SystemKernel.IO.openBookingModal('Electrical Maintenance')">Book Job Now</button>
             </div>
           </div>
           <div class="handyman-card">
             <img class="handyman-img" alt="Plumbing Maintenance" src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=400&q=80">
             <div class="handyman-info">
               <div class="handyman-title">Plumbing & Faucet Replacements</div>
-              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Plumbing Repair')">Book Job Now</button>
+              <button class="btn-card-action" onclick="SystemKernel.IO.openBookingModal('Plumbing Repair')">Book Job Now</button>
             </div>
           </div>
           <div class="handyman-card">
             <img class="handyman-img" alt="Drywall Refurbishing" src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=400&q=80">
             <div class="handyman-info">
               <div class="handyman-title">Drywall Patching & Finish Prep</div>
-              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Drywall Repair')">Book Job Now</button>
+              <button class="btn-card-action" onclick="SystemKernel.IO.openBookingModal('Drywall Repair')">Book Job Now</button>
             </div>
           </div>
           <div class="handyman-card">
             <img class="handyman-img" alt="Smart System Setup" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=400&q=80">
             <div class="handyman-info">
               <div class="handyman-title">Smart Video Doorbell Installation</div>
-              <button class="btn-card-action" onclick="SystemKernel.IO.requestCatalogService('Doorbell Installation')">Book Job Now</button>
+              <button class="btn-card-action" onclick="SystemKernel.IO.openBookingModal('Doorbell Installation')">Book Job Now</button>
             </div>
           </div>
         </div>
@@ -282,7 +282,10 @@
             <h4><i class="fa-solid fa-box-open"></i> Manage Your Asset Trade Profile</h4>
             <label for="barter-asset">Item/Service You Offer to Trade:</label>
             <input type="text" id="barter-asset" class="field-input" placeholder="e.g., 4 Custom Cedar Fence Posts">
-            <button class="form-submit-btn" onclick="SystemKernel.IO.saveClientBarterAsset()">Publish to Exchange Board</button>
+            <label for="barter-photo" style="font-size:12px; font-weight:700; color:var(--text-muted);">Upload Portfolio Photos (optional)</label>
+            <input type="file" id="barter-photo" accept="image/*" class="field-input" style="padding:6px;" multiple>
+            <div style="display:flex; gap:8px;"><button class="form-submit-btn" onclick="SystemKernel.IO.saveClientBarterAsset()">Publish to Exchange Board</button>
+            <button class="form-submit-btn" style="background:#2563EB;" onclick="SystemKernel.IO.uploadBarterPhotos()">Upload Photos</button></div>
           </div>
           <div class="ui-feature-card">
             <h4>Your Active Listed Exchange Items</h4>
@@ -311,6 +314,9 @@
             <select id="review-stars" class="field-input">
               <option value="5">★★★★★ (5/5 Perfect Execution)</option>
               <option value="4">★★★★☆ (4/5 Satisfactory)</option>
+              <option value="3">★★★☆☆ (3/5 Average)</option>
+              <option value="2">★★☆☆☆ (2/5 Below Average)</option>
+              <option value="1">★☆☆☆☆ (1/5 Poor)</option>
             </select>
             <label for="review-text">Operational Assessment Feedback:</label>
             <input type="text" id="review-text" class="field-input" placeholder="Explain the transaction quality...">
@@ -409,238 +415,16 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- Floating Gemini widget injected globally -->
+  <div id="gemini-floating" style="position:fixed;right:18px;bottom:22px;z-index:99999;">
+    <button id="gemini-toggle" title="Open Gemini" style="background:linear-gradient(135deg,#111827,#0ea5e9);border:none;color:white;padding:14px;border-radius:999px;box-shadow:0 10px 30px rgba(2,6,23,0.3);cursor:pointer;font-weight:800;display:flex;align-items:center;gap:10px;">
+      <i class="fa-solid fa-robot"></i>
+      <span style="font-size:13px;">Gemini</span>
+    </button>
+  </div>
 
-  <script>
-    // --- PWA SERVICE WORKER KERNEL ---
-    (function injectPWAKernel() {
-      if ('serviceWorker' in navigator) {
-        const swCode = `
-          const CACHE_NAME = 'adapro-kernel-v1';
-          const ASSETS = [ './index.html', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' ];
-          self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))));
-          self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
-        `;
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(blob), { scope: './' }).catch(() => {});
-      }
-    })();
-
-    // --- CONSOLIDATED APPLICATION ARCHITECTURE CORE ---
-    const SystemKernel = (function () {
-      const _config = { 
-        apiKey: "AIzaSyB8bLp1E_FmE0fX-g8K8tU6zR8wM4X_kY0", 
-        authDomain: "adapro-cc678.firebaseapp.com",
-        databaseURL: "https://adapro-cc678-default-rtdb.firebaseio.com/" 
-      };
-
-      const _state = {
-        activeUserKey: "sample_customer_01",
-        clientPoints: 0,
-        proWalletPoints: 0,
-        userRole: "client",
-        userEmail: "",
-        databaseListeners: []
-      };
-
-      const _contractorRegistry = [
-        { name: "Apex Plumbing Solutions", trade: "Plumbing Repair", tier: "Pro Elite", rating: "5/5" },
-        { name: "ProConnect Electrical Corp", trade: "Electrical Maintenance", tier: "Pro Elite", rating: "4.9/5" },
-        { name: "Rapid Drywall Finishers", trade: "Drywall Repair", tier: "Certified Pro", rating: "4.8/5" },
-        { name: "SmartHome Link Integrators", trade: "Doorbell Installation", tier: "Certified Pro", rating: "5/5" }
-      ];
-
-      let db, auth;
-
-      function safeText(str) {
-        const div = document.createElement('div');
-        div.innerText = str || '';
-        return div.innerHTML;
-      }
-
-      function _clearListeners() {
-        _state.databaseListeners.forEach(ref => { if (typeof ref.off === 'function') ref.off(); });
-        _state.databaseListeners = [];
-      }
-
-      function _registerLiveDataPipes() {
-        try {
-          // Live Data Pipe 1: Core User Account State Sync
-          const pointsRef = db.ref(`users/${_state.activeUserKey}`);
-          pointsRef.on('value', (snapshot) => {
-            const userData = snapshot.val();
-            _state.clientPoints = (userData && (userData.points || userData.pointsBalance)) || 0;
-            _state.proWalletPoints = (userData && userData.proWalletPoints) || 0;
-            _state.userRole = (userData && userData.role) || "client";
-
-            const target = document.getElementById('client-display-points');
-            if (target) target.innerText = `${_state.clientPoints} Points`;
-
-            const walletTarget = document.getElementById('pro-wallet-points');
-            if (walletTarget) walletTarget.innerText = `${_state.proWalletPoints} Points Accumulated`;
-          });
-          _state.databaseListeners.push(pointsRef);
-
-          // Live Data Pipe 2: Global Marketplace/Queues
-          db.ref('dispatches').on('value', (snapshot) => {
-            const table = document.getElementById('pro-dispatch-rows');
-            if (!table) return;
-            let html = "";
-            if (snapshot.exists()) {
-              snapshot.forEach(child => {
-                const item = child.val();
-                const key = child.key;
-                const title = item.serviceName || item.serviceCategory || "General Request Task";
-                html += `<tr>
-                  <td><strong>${safeText(key)}</strong></td>
-                  <td>${safeText(title)}</td>
-                  <td><span style="background:#dbeafe; color:#1e40af; padding:2px 6px; border-radius:4px; font-weight:bold;">${item.pointValue || 20} Pts</span></td>
-                  <td>${safeText(item.assignedContractor || 'Unassigned Open Pool')}</td>
-                  <td><span style="color:#dc2626; font-weight:900;">${safeText(item.status)}</span></td>
-                  <td><button class="action-badge-btn badge-claim" onclick="SystemKernel.IO.updateDispatchState('${key}', 'CLAIMED')">Claim</button></td>
-                </tr>`;
-              });
-            } else {
-              html = `<tr><td colspan="6">No active dispatches found in standard records.</td></tr>`;
-            }
-            table.innerHTML = html;
-          });
-        } catch (e) { console.error("Database initialization telemetry error:", e); }
-      }
-
-      function _initAuthWatcher() {
-        auth.onAuthStateChanged((user) => {
-          _clearListeners();
-          if (user) {
-            _state.activeUserKey = user.uid;
-            _state.userEmail = user.email;
-            document.getElementById('auth-status-label').innerHTML = `🟢 Session Connection Live: <strong style="color:var(--primary-red);">${safeText(user.email)}</strong>`;
-            document.getElementById('auth-gateway-overlay').style.display = 'none';
-          } else {
-            _state.activeUserKey = "sample_customer_01";
-            document.getElementById('auth-status-label').innerText = "Browsing Mode: Sandbox Account Profile";
-          }
-          _registerLiveDataPipes();
-        });
-      }
-
-      return {
-        Boot: function () {
-          firebase.initializeApp(_config);
-          db = firebase.database();
-          auth = firebase.auth();
-          _initAuthWatcher();
-        },
-        UI: {
-          switchDashboardMode: function (targetMode) {
-            document.getElementById('toggle-client').classList.toggle('active', targetMode === 'client');
-            document.getElementById('toggle-pro').classList.toggle('active', targetMode === 'pro');
-            document.getElementById('client-view-container').style.display = targetMode === 'client' ? 'block' : 'none';
-            document.getElementById('pro-view-container').style.display = targetMode === 'pro' ? 'block' : 'none';
-            window.switchAppView(targetMode);
-          },
-          switchTab: function (context, targetId, btn) {
-            btn.parentElement.querySelectorAll('.nav-tab-link').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-            const scope = context === 'client' ? '#client-view-container' : '#pro-view-container';
-            document.querySelectorAll(`${scope} .dashboard-panel`).forEach(p => p.classList.remove('active-panel'));
-            document.getElementById(targetId).classList.add('active-panel');
-          },
-          renderSystemMatrix: function () {
-            const grid = document.getElementById('client-calendar-matrix');
-            if (!grid) return;
-            for (let i = 1; i <= 24; i++) {
-              const slot = document.createElement('div');
-              slot.className = `calendar-slot ${i % 5 === 0 ? 'booked' : ''}`;
-              slot.innerText = i % 5 === 0 ? 'Filled' : `Week ${i}`;
-              grid.appendChild(slot);
-            }
-          }
-        },
-        IO: {
-          requestCatalogService: function (catalogName) {
-            const cost = 20;
-            if (_state.clientPoints < cost) return alert("⚠️ Insufficient point balances!");
-            const uuid = 'JOB_' + Math.floor(Math.random() * 9000 + 1000);
-            
-            db.ref(`users/${_state.activeUserKey}`).update({ points: _state.clientPoints - cost })
-              .then(() => {
-                return db.ref('dispatches/' + uuid).set({ 
-                  serviceName: catalogName, status: 'DISPATCHED', clientId: _state.activeUserKey, pointValue: cost, createdAt: new Date().toISOString()
-                });
-              }).then(() => alert(`🎉 Order Dispatched Natively: ${uuid}`));
-          },
-          updateDispatchState: function (jobId, status) {
-            db.ref(`dispatches/${jobId}`).update({ status: status, assignedContractor: _state.userEmail || "Claimed Pro Provider" })
-              .then(() => alert(`Status transformed: ${status}`));
-          },
-          saveClientBarterAsset: function() {
-            const input = document.getElementById('barter-asset');
-            if(!input.value.trim()) return;
-            db.ref(`barterTrades/profiles/${_state.activeUserKey}`).push(input.value.trim()).then(() => {
-              input.value = '';
-              alert("Barter token pushed directly to storage records!");
-            });
-          },
-          postEcosystemReview: function() {
-            const targetType = document.getElementById('review-target-type').value;
-            const stars = document.getElementById('review-stars').value;
-            const text = document.getElementById('review-text').value;
-            if(!text.trim()) return alert("Please provide feedback");
-            db.ref(`reviews/${_state.activeUserKey}`).push({ targetType, stars, text, createdAt: new Date().toISOString() }).then(() => {
-              document.getElementById('review-text').value = '';
-              alert("Review published successfully!");
-            });
-          }
-        }
-      };
-    })();
-
-    // --- BACKWARD ACCESSIBILITY WIRELESS LAYER MAPPINGS ---
-    window.switchAppView = function(viewMode) {
-      const clientSec = document.getElementById('client-workspace-panel');
-      const proSec = document.getElementById('p-jobs');
-      if(clientSec && proSec) {
-        clientSec.style.display = viewMode === 'pro' ? 'none' : 'block';
-        proSec.style.display = viewMode === 'pro' ? 'block' : 'none';
-      }
-    };
-
-    window.setAuthRole = (role) => {
-      document.getElementById('auth-role-client-btn').style.background = role === 'client' ? '#EF4444' : 'transparent';
-      document.getElementById('auth-role-client-btn').style.color = role === 'client' ? 'white' : '#a1a1aa';
-      document.getElementById('auth-role-pro-btn').style.background = role === 'pro' ? '#EF4444' : 'transparent';
-      document.getElementById('auth-role-pro-btn').style.color = role === 'pro' ? 'white' : '#a1a1aa';
-    };
-
-    window.handleEmailAuth = (e) => {
-      e.preventDefault();
-      document.getElementById('auth-gateway-overlay').style.display = 'none';
-    };
-    
-    window.handleGoogleAuth = () => {
-      document.getElementById('auth-gateway-overlay').style.display = 'none';
-    };
-
-    window.toggleAuthMode = () => {};
-
-    // --- START OPERATIONS LAYER BOOTSTRAP ---
-    window.addEventListener('DOMContentLoaded', () => {
-      SystemKernel.Boot();
-      SystemKernel.UI.renderSystemMatrix();
-
-      // Form Match Listener Binder
-      const matchBtn = document.getElementById('requestMatchBtn');
-      if(matchBtn) {
-        matchBtn.addEventListener('click', () => {
-          const desc = document.getElementById('quote-desc').value;
-          const cat = document.getElementById('routing-category').value;
-          SystemKernel.IO.requestCatalogService(`${cat}: ${desc}`);
-        });
-      }
-    });
-  </script>
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/app-extensions.js"></script>
 </body>
 </html>
